@@ -1,0 +1,14 @@
+# Unity-specific ignores
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Aa]nalytics/[A-Z]*.db
+*.apk
+*.unitypackage
+
+# VS Code ignores
+.vscode/
