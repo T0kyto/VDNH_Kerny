@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using AwakeSolutions;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SceneController : MonoBehaviour
 {
@@ -10,24 +12,21 @@ public class SceneController : MonoBehaviour
     private AbstractSceneState _currentState;
     
     [Header("Media Players")]
-    [SerializeField] private string _videosFolder;
-    
-    [SerializeField] private AwakeMediaPlayer _backScreenBackground;
-    [SerializeField] private AwakeMediaPlayer _frontScreenContentWM;
-    [SerializeField] private AwakeMediaPlayer _frontScreenContentPM;
-    [SerializeField] private AwakeMediaPlayer _transitionMediaPlayerFront;
-    [SerializeField] private AwakeMediaPlayer _transitionMediaPlayerBack;
-    [SerializeField] private AwakeMediaPlayer _showModeMediaPlayerFront;
+    public string VideosFolder;
     [SerializeField] private AwakeMediaPlayer[] _kernStands;
     
     [Header("Layers Alpha")] 
-    public AlphaTransition FrontWM;
-    public AlphaTransition FrontPM;
     public AlphaTransition ReadyMessage;
-    public AlphaTransition TransitionLayoutFront;
-    public AlphaTransition TransitionLayoutBack;
-    public AlphaTransition PlayModeLayoutFront;
-    public AlphaTransition ShowModeLayoutFront;
+
+    [Header("Layer Controllers")] 
+    public LayerController BackScreenContent;
+    public LayerController BackScreenTransition;
+
+    public LayerController FrontScreenWM;
+    public LayerController FrontScreenPM;
+    public LayerController FrontScreenShowMode;
+    public LayerController FrontScreenTransition;
+    
 
     #region private methods
 
@@ -52,21 +51,20 @@ public class SceneController : MonoBehaviour
     
     private IEnumerator ShowTransitionFront(float duration)
     {
-        TransitionLayoutFront.SetOpaque();
-        _transitionMediaPlayerFront.Play();
+        FrontScreenTransition.SetOpaque();
+        FrontScreenTransition.Play();
         yield return new WaitForSeconds(duration - 0.3f);
         SetNextState();
         yield return new WaitForSeconds(0.3f);
-        TransitionLayoutFront.SetTransparent();
-        
+        FrontScreenTransition.SetTransparent();
     }
 
     private IEnumerator ShowTransitionBack(float duration)
     {
-        TransitionLayoutBack.SetOpaque();
-        _transitionMediaPlayerBack.Play();
+        BackScreenTransition.SetOpaque();
+        BackScreenTransition.Play();
         yield return new WaitForSeconds(duration);
-        TransitionLayoutBack.SetTransparent();
+        BackScreenTransition.SetTransparent();
     }
 
     #endregion
@@ -94,28 +92,10 @@ public class SceneController : MonoBehaviour
         }
     }
 
-    public void SetBackScreenContent(string filename)
-    {
-        _backScreenBackground.Open(_videosFolder, filename, true, true);
-    }
-    
-
-    public void SetFrontScreenContent(string filename, bool onWM = true)
-    {
-        if (onWM)
-        {
-            _frontScreenContentWM.Open(_videosFolder, filename, true, true);
-        }
-        else
-        {
-            _frontScreenContentPM.Open(_videosFolder, filename, true, true);
-        }
-    }
-
     public void SetKernState(int kernId, bool state)
     {
         string filename = state ? "KernGreen" : "KernRed";
-        _kernStands[kernId].Open(_videosFolder, filename, true, true);
+        _kernStands[kernId].Open(VideosFolder, filename, true, true);
     }
 
     public void ShowReadyMessage()
@@ -132,11 +112,6 @@ public class SceneController : MonoBehaviour
     {
         StartCoroutine(ShowTransitionBack(duration));
         StartCoroutine(ShowTransitionFront(duration));
-    }
-
-    public void StartShowFront()
-    {
-        _showModeMediaPlayerFront.Play();
     }
 
     #endregion

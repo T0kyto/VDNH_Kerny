@@ -18,16 +18,15 @@ public class WaitingModeState : AbstractSceneState
 
     public override void OnEnter()
     {
-        _controller.SetBackScreenContent("BackScreenBackground");
-        _controller.SetFrontScreenContent("FrontScreenContentWM");
-        
-        _controller.FrontWM.SetOpaque();
+        _controller.BackScreenContent.Open(_controller.VideosFolder, "BackScreenBackground");
+        _controller.FrontScreenWM.Open(_controller.VideosFolder, "FrontScreenContentWM");
+        _controller.FrontScreenWM.SetOpaque();
     }
 
     public override void OnExit()
     {
-        _controller.FrontWM.StartFadeOut();
-        _controller.FrontPM.StartFadeIn();
+        _controller.FrontScreenWM.StartFadeOut(1f);
+        _controller.FrontScreenPM.StartFadeIn(1f);
     }
     
 }
@@ -92,7 +91,6 @@ public class PlayModeState : AbstractSceneState
         if ((_readyMessageShown && Input.GetKeyDown(KeyCode.Alpha0) && !_isTransitionStarted) ||
             (_readyMessageShown && Input.GetKeyDown(KeyCode.Q) && !_isTransitionStarted))
         {
-            Debug.Log("transitionStarted");
             _controller.TransitionedNextState(3);
             _controller.HideReadyMessage();
             _isTransitionStarted = true;
@@ -114,15 +112,17 @@ public class ContentMode : AbstractSceneState
 
     public override void OnEnter()
     {
-        _controller.PlayModeLayoutFront.SetTransparent();
-        _controller.ShowModeLayoutFront.SetOpaque();
-        _controller.StartShowFront();
-        _controller.SetBackScreenContent("show");
+        _controller.FrontScreenPM.SetTransparent();
+        _controller.FrontScreenShowMode.SetOpaque();
+        _controller.FrontScreenShowMode.Play();
+        
+        _controller.BackScreenContent.Open(_controller.VideosFolder, "show");
+        _controller.BackScreenContent.Play();
     }
 
     public override void OnExit()
     {
-        _controller.ShowModeLayoutFront.SetTransparent();
+        _controller.FrontScreenShowMode.SetTransparent();
     }
     
 }

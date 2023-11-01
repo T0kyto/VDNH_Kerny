@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\AwakeSolutions\AwakeLocalizator\LocalizableText.cs" />
      <Compile Include="Assets\Scripts\SceneStates.cs" />
      <Compile Include="Assets\Scripts\AwakeSolutions\AwakeMediaPlayer\Scripts\AwakeMediaPlayer.cs" />
+     <Compile Include="Assets\Scripts\LayerController.cs" />
      <Compile Include="Assets\Scripts\AwakeSolutions\AwakeCamerasConfigurator\Scripts\EdgeBlending.cs" />
      <Compile Include="Assets\Scripts\AwakeSolutions\AwakeCamerasConfigurator\Scripts\QuickCorner.cs" />
      <Compile Include="Assets\Scripts\SceneController.cs" />
